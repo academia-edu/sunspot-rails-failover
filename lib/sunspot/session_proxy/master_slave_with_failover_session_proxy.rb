@@ -10,7 +10,13 @@ module Sunspot
       end
       
       def search(*types, &block)
-        result = with_exception_handling { slave_session.search(*types, &block) }
+        begin
+          Timeout.timeout(0.01) do
+            TCPSocket.new(slave_session.config.solr.url[7..-11], 'echo')
+          end
+          result = with_exception_handling { slave_session.search(*types, &block) }
+        rescue
+        end	
         result ||= with_exception_handling { master_session.search(*types, &block) }
         
         raise(exception) unless result
