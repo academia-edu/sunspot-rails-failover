@@ -5,8 +5,7 @@ module Sunspot
 
       def commit
         with_exception_handling do
-          # Don't commit
-          # master_session.commit
+          master_session.commit
         end
       end
 
