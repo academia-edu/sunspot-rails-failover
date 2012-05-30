@@ -12,7 +12,7 @@ module Sunspot
       def search(*types, &block)
         begin
           Timeout.timeout(0.01) do
-            TCPSocket.new(slave_session.config.solr.url[7..-11], 'echo')
+            TCPSocket.new(slave_session.config.solr.url[7..-11], slave_session.config.solr.url[-9..-6].to_i)
           end
         rescue
           slave_dead = true
