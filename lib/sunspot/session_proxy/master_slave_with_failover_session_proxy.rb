@@ -38,5 +38,16 @@ module Sunspot
       end
 
     end
+
+    class MulticoreSessionProxy < AbstractSessionProxy
+
+      # Connects to core0 of solr instance
+      attr_reader :core0
+
+      # Connects to core1 of solr instance
+      attr_reader :core1
+
+
+    end
   end
 end

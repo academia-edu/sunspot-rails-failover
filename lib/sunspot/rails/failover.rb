@@ -7,24 +7,31 @@ module Sunspot
     module Failover
       class << self
         attr_accessor :exception_handler
-        
+
         def setup
+          binding.pry
+          master_core0_session = SessionProxy::ThreadLocalSessionProxy.new(master_core0_config)
+          master_core1_session = SessionProxy::ThreadLocalSessionProxy.new(master_core1_config)
+
+          slave_core0_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core0_config)
+          slave_core1_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core1_config)
+
           Sunspot.session = if Rails.configuration.has_master?
             SessionProxy::MasterSlaveWithFailoverSessionProxy.new(
-              SessionProxy::ThreadLocalSessionProxy.new(master_config),
-              SessionProxy::ThreadLocalSessionProxy.new(slave_config)
+              SessionProxy::MulticoreSessionProxy.new(master_core0_session, master_core1_session),
+              SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
             )
           else
-            SessionProxy::ThreadLocalSessionProxy.new(slave_config)
+            SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
           end
         end
-        
+
       private
-      
+
         def slave_config
           Rails.send :slave_config, Rails.configuration
         end
-        
+
         def master_config
           Rails.send :master_config, Rails.configuration
         end
