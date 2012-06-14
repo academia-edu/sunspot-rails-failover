@@ -27,7 +27,7 @@ module Sunspot
         result
       end
 
-    private
+      private
 
       def with_exception_handling
         yield
@@ -46,7 +46,6 @@ module Sunspot
 
       # Connects to core1 of solr instance
       attr_reader :core1
-
 
     end
   end

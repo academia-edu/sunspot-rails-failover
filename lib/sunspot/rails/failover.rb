@@ -1,8 +1,10 @@
 require 'sunspot'
 require 'sunspot/session_proxy/master_slave_with_failover_session_proxy'
 require 'sunspot/rails/failover/exception_handler_adapter'
-require 'sunspot/rails/rails'
-require 'sunspot/rails/configuration'
+
+# Monkey patches
+require File.join(File.dirname(__FILE__), 'configuration')
+require File.join(File.dirname(__FILE__), 'rails')
 
 require 'pry-nav'
 
@@ -13,7 +15,6 @@ module Sunspot
         attr_accessor :exception_handler
 
         def setup
-          binding.pry
           master_core0_session = SessionProxy::ThreadLocalSessionProxy.new(master_core0_config)
           master_core1_session = SessionProxy::ThreadLocalSessionProxy.new(master_core1_config)
 

@@ -1,4 +1,5 @@
 require 'sunspot'
+require 'sunspot/rails/configuration'
 
 module Sunspot
   module Rails

@@ -2,7 +2,6 @@ require 'erb'
 
 module Sunspot
   module Rails
-
     class Configuration
       attr_writer :user_configuration
 
@@ -48,9 +47,16 @@ module Sunspot
       end
 
       def method_missing(method_id, *arguments, &block)
-        if method_id.to_s =~ /^master_[\w]_path$/
+        if method_id.to_s =~ /^(?:master|slave)_([\w]+)_path$/
           self.class.send :define_method, method_id do
-
+            unless instance_variable_defined?("@#{method_id}")
+              path = if has_master?
+                user_configuration_from_key('master_solr', "#{$1}_path")
+              else
+                user_configuration_from_key('solr', "#{$1}_path")
+              end
+              instance_variable_set("@#{method_id}", path)
+            end
           end
           self.send(method_id)
         else
@@ -59,7 +65,7 @@ module Sunspot
       end
 
       def respond_to?(method_id, include_private = false)
-        if method_id.to_s =~ /^master_[\w]_path$/
+        if method_id.to_s =~ /^(?:master|slave)_([\w]+)_path$/
           true
         else
           super
@@ -141,57 +147,6 @@ module Sunspot
       def open_timeout
         @open_timeout ||= user_configuration_from_key('solr', 'open_timeout')
       end
-
-      #
-      # Whether or not to disable Solr.
-      # Defaults to false.
-      #
-      # def disabled?
-      #   @disabled ||= (user_configuration_from_key('disabled') || false)
-      # end
-
-      # private
-
-      #
-      # Logging in rails_root/log as solr_<environment>.log as a
-      # default.
-      #
-      # ===== Returns
-      #
-      # String:: default_log_file_location
-      #
-      # def default_log_file_location
-      #   File.join(::Rails.root, 'log', "solr_" + ::Rails.env + ".log")
-      # end
-
-      #
-      # return a specific key from the user configuration in config/sunspot.yml
-      #
-      # ==== Returns
-      #
-      # Mixed:: requested_key or nil
-      #
-
-      # def user_configuration_from_key( *keys )
-      #   keys.inject(user_configuration) do |hash, key|
-      #     hash[key] if hash
-      #   end
-      # end
-
-      # def user_configuration
-      #   @user_configuration ||=
-      #     begin
-      #       path = File.join(::Rails.root, 'config', 'sunspot.yml')
-      #       if File.exist?(path)
-      #         File.open(path) do |file|
-      #           processed = ERB.new(file.read).result
-      #           YAML.load(processed)[::Rails.env]
-      #         end
-      #       else
-      #         {}
-      #       end
-      #     end
-      # end
     end
   end
 end
