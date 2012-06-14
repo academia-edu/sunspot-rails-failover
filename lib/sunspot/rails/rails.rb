@@ -17,7 +17,7 @@ module Sunspot
       config.solr.url = URI::HTTP.build(
         :host => sunspot_rails_configuration.master_hostname,
         :port => sunspot_rails_configuration.master_port,
-        :path => sunspot_rails_configuration.master_path
+        :path => sunspot_rails_configuration.master_core0_path
       ).to_s
       config.solr.read_timeout = sunspot_rails_configuration.read_timeout
       config.solr.open_timeout = sunspot_rails_configuration.open_timeout
@@ -29,7 +29,7 @@ module Sunspot
       config.solr.url = URI::HTTP.build(
         :host => sunspot_rails_configuration.master_hostname,
         :port => sunspot_rails_configuration.master_port,
-        :path => sunspot_rails_configuration.master_path
+        :path => sunspot_rails_configuration.master_core1_path
       ).to_s
       config.solr.read_timeout = sunspot_rails_configuration.read_timeout
       config.solr.open_timeout = sunspot_rails_configuration.open_timeout
@@ -39,9 +39,9 @@ module Sunspot
     def slave_core0_config(sunspot_rails_configuration)
       config = Sunspot::Configuration.build
       config.solr.url = URI::HTTP.build(
-        :host => sunspot_rails_configuration.master_hostname,
-        :port => sunspot_rails_configuration.master_port,
-        :path => sunspot_rails_configuration.master_path
+        :host => sunspot_rails_configuration.hostname,
+        :port => sunspot_rails_configuration.port,
+        :path => sunspot_rails_configuration.core0_path
       ).to_s
       config.solr.read_timeout = sunspot_rails_configuration.read_timeout
       config.solr.open_timeout = sunspot_rails_configuration.open_timeout
@@ -53,7 +53,7 @@ module Sunspot
       config.solr.url = URI::HTTP.build(
         :host => sunspot_rails_configuration.master_hostname,
         :port => sunspot_rails_configuration.master_port,
-        :path => sunspot_rails_configuration.master_path
+        :path => sunspot_rails_configuration.core1_path
       ).to_s
       config.solr.read_timeout = sunspot_rails_configuration.read_timeout
       config.solr.open_timeout = sunspot_rails_configuration.open_timeout

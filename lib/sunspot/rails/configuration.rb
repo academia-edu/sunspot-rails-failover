@@ -35,6 +35,7 @@ module Sunspot
       end
 
       def master_hostname
+        binding.pry
         @master_hostname ||= (user_configuration_from_key('master_solr', 'hostname') || hostname)
       end
 
@@ -46,7 +47,7 @@ module Sunspot
         @master_path ||= (user_configuration_from_key('master_solr', 'path') || path)
       end
 
-
+      # config/sunspot.yml multicore setting enables multicore support
       def is_multicore?
         @is_multicore = !!user_configuration_from_key('multicore')
       end
@@ -126,11 +127,11 @@ module Sunspot
       # Whether or not to disable Solr.
       # Defaults to false.
       #
-      def disabled?
-        @disabled ||= (user_configuration_from_key('disabled') || false)
-      end
+      # def disabled?
+      #   @disabled ||= (user_configuration_from_key('disabled') || false)
+      # end
 
-      private
+      # private
 
       #
       # Logging in rails_root/log as solr_<environment>.log as a
@@ -140,9 +141,9 @@ module Sunspot
       #
       # String:: default_log_file_location
       #
-      def default_log_file_location
-        File.join(::Rails.root, 'log', "solr_" + ::Rails.env + ".log")
-      end
+      # def default_log_file_location
+      #   File.join(::Rails.root, 'log', "solr_" + ::Rails.env + ".log")
+      # end
 
       #
       # return a specific key from the user configuration in config/sunspot.yml
@@ -151,26 +152,27 @@ module Sunspot
       #
       # Mixed:: requested_key or nil
       #
-      def user_configuration_from_key( *keys )
-        keys.inject(user_configuration) do |hash, key|
-          hash[key] if hash
-        end
-      end
 
-      def user_configuration
-        @user_configuration ||=
-          begin
-            path = File.join(::Rails.root, 'config', 'sunspot.yml')
-            if File.exist?(path)
-              File.open(path) do |file|
-                processed = ERB.new(file.read).result
-                YAML.load(processed)[::Rails.env]
-              end
-            else
-              {}
-            end
-          end
-      end
+      # def user_configuration_from_key( *keys )
+      #   keys.inject(user_configuration) do |hash, key|
+      #     hash[key] if hash
+      #   end
+      # end
+
+      # def user_configuration
+      #   @user_configuration ||=
+      #     begin
+      #       path = File.join(::Rails.root, 'config', 'sunspot.yml')
+      #       if File.exist?(path)
+      #         File.open(path) do |file|
+      #           processed = ERB.new(file.read).result
+      #           YAML.load(processed)[::Rails.env]
+      #         end
+      #       else
+      #         {}
+      #       end
+      #     end
+      # end
     end
   end
 end
