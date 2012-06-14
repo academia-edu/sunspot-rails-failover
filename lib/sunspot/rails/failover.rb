@@ -1,6 +1,8 @@
 require 'sunspot'
 require 'sunspot/session_proxy/master_slave_with_failover_session_proxy'
 require 'sunspot/rails/failover/exception_handler_adapter'
+require 'sunspot/rails/rails'
+require 'sunspot/rails/configuration'
 
 require 'pry-nav'
 
@@ -41,19 +43,19 @@ module Sunspot
 
         private
 
-        def master_core0_config(sunspot_rails_configuration)
+        def master_core0_config
           Rails.send :master_core0_config, Rails.configuration
         end
 
-        def master_core1_config(sunspot_rails_configuration)
+        def master_core1_config
           Rails.send :master_core1_config, Rails.configuration
         end
 
-        def slave_core0_config(sunspot_rails_configuration)
+        def slave_core0_config
           Rails.send :slave_core0_config, Rails.configuration
         end
 
-        def slave_core1_config(sunspot_rails_configuration)
+        def slave_core1_config
           Rails.send :slave_core1_config, Rails.configuration
         end
 
