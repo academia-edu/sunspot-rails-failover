@@ -47,6 +47,9 @@ module Sunspot
       end
 
 
+      def is_multicore?
+        @is_multicore = !!user_configuration_from_key('multicore')
+      end
 
       def has_master?
         @has_master = !!user_configuration_from_key('master_solr')

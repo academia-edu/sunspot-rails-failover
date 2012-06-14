@@ -16,17 +16,45 @@ module Sunspot
           slave_core0_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core0_config)
           slave_core1_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core1_config)
 
-          Sunspot.session = if Rails.configuration.has_master?
-            SessionProxy::MasterSlaveWithFailoverSessionProxy.new(
-              SessionProxy::MulticoreSessionProxy.new(master_core0_session, master_core1_session),
+
+          Sunspot.session = if Rails.configuration.is_multicore?
+            if Rails.configuration.has_master?
+              SessionProxy::MasterSlaveWithFailoverSessionProxy.new(
+                SessionProxy::MulticoreSessionProxy.new(master_core0_session, master_core1_session),
+                SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
+              )
+            else
               SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
-            )
+            end
           else
-            SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
+            if Rails.configuration.has_master?
+              SessionProxy::MasterSlaveWithFailoverSessionProxy.new(
+                SessionProxy::ThreadLocalSessionProxy.new(master_config),
+                SessionProxy::ThreadLocalSessionProxy.new(slave_config)
+              )
+            else
+              SessionProxy::ThreadLocalSessionProxy.new(slave_config)
+            end
           end
         end
 
-      private
+        private
+
+        def master_core0_config(sunspot_rails_configuration)
+          Rails.send :master_core0_config, Rails.configuration
+        end
+
+        def master_core1_config(sunspot_rails_configuration)
+          Rails.send :master_core1_config, Rails.configuration
+        end
+
+        def slave_core0_config(sunspot_rails_configuration)
+          Rails.send :slave_core0_config, Rails.configuration
+        end
+
+        def slave_core1_config(sunspot_rails_configuration)
+          Rails.send :slave_core1_config, Rails.configuration
+        end
 
         def slave_config
           Rails.send :slave_config, Rails.configuration
