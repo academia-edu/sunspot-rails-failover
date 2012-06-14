@@ -6,8 +6,6 @@ require 'sunspot/rails/failover/exception_handler_adapter'
 require File.join(File.dirname(__FILE__), 'configuration')
 require File.join(File.dirname(__FILE__), 'rails')
 
-require 'pry-nav'
-
 module Sunspot
   module Rails
     module Failover
