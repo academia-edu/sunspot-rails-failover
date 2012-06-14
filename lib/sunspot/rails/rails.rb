@@ -13,15 +13,51 @@ module Sunspot
     private
 
     def master_core0_config(sunspot_rails_configuration)
+      config = Sunspot::Configuration.build
+      config.solr.url = URI::HTTP.build(
+        :host => sunspot_rails_configuration.master_hostname,
+        :port => sunspot_rails_configuration.master_port,
+        :path => sunspot_rails_configuration.master_path
+      ).to_s
+      config.solr.read_timeout = sunspot_rails_configuration.read_timeout
+      config.solr.open_timeout = sunspot_rails_configuration.open_timeout
+      config
     end
 
     def master_core1_config(sunspot_rails_configuration)
+      config = Sunspot::Configuration.build
+      config.solr.url = URI::HTTP.build(
+        :host => sunspot_rails_configuration.master_hostname,
+        :port => sunspot_rails_configuration.master_port,
+        :path => sunspot_rails_configuration.master_path
+      ).to_s
+      config.solr.read_timeout = sunspot_rails_configuration.read_timeout
+      config.solr.open_timeout = sunspot_rails_configuration.open_timeout
+      config
     end
 
     def slave_core0_config(sunspot_rails_configuration)
+      config = Sunspot::Configuration.build
+      config.solr.url = URI::HTTP.build(
+        :host => sunspot_rails_configuration.master_hostname,
+        :port => sunspot_rails_configuration.master_port,
+        :path => sunspot_rails_configuration.master_path
+      ).to_s
+      config.solr.read_timeout = sunspot_rails_configuration.read_timeout
+      config.solr.open_timeout = sunspot_rails_configuration.open_timeout
+      config
     end
 
     def slave_core1_config(sunspot_rails_configuration)
+      config = Sunspot::Configuration.build
+      config.solr.url = URI::HTTP.build(
+        :host => sunspot_rails_configuration.master_hostname,
+        :port => sunspot_rails_configuration.master_port,
+        :path => sunspot_rails_configuration.master_path
+      ).to_s
+      config.solr.read_timeout = sunspot_rails_configuration.read_timeout
+      config.solr.open_timeout = sunspot_rails_configuration.open_timeout
+      config
     end
 
   end

@@ -2,6 +2,8 @@ require 'sunspot'
 require 'sunspot/session_proxy/master_slave_with_failover_session_proxy'
 require 'sunspot/rails/failover/exception_handler_adapter'
 
+require 'pry-nav'
+
 module Sunspot
   module Rails
     module Failover
@@ -15,7 +17,6 @@ module Sunspot
 
           slave_core0_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core0_config)
           slave_core1_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core1_config)
-
 
           Sunspot.session = if Rails.configuration.is_multicore?
             if Rails.configuration.has_master?
