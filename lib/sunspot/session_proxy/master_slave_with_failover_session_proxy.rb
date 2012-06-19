@@ -42,11 +42,21 @@ module Sunspot
     class MulticoreSessionProxy < AbstractSessionProxy
 
       # Connects to core0 of solr instance
-      attr_reader :core0
+      attr_reader :core0_session
 
       # Connects to core1 of solr instance
-      attr_reader :core1
+      attr_reader :core1_session
 
+      def initialize(core0_session, core1_session)
+        @core0_session, @core1_session = core0_session, core1_session
+      end
+
+      def config(delegate = :core0)
+        case delegate
+        when :core0 then @core0_session.config
+        when :core1 then @core1_session.config
+        else raise(ArgumentError, "Expected :core0 or :core1")
+      end
     end
   end
 end
