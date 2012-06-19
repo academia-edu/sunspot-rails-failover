@@ -19,14 +19,16 @@ module Sunspot
           slave_core0_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core0_config)
           slave_core1_session = SessionProxy::ThreadLocalSessionProxy.new(slave_core1_config)
 
+          reindexing = Rails.configuration.reindexing?
+
           Sunspot.session = if Rails.configuration.is_multicore?
             if Rails.configuration.has_master?
               SessionProxy::MasterSlaveWithFailoverSessionProxy.new(
-                SessionProxy::MulticoreSessionProxy.new(master_core0_session, master_core1_session),
-                SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
+                SessionProxy::MulticoreSessionProxy.new(master_core0_session, master_core1_session, reindexing),
+                SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session, reindexing)
               )
             else
-              SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session)
+              SessionProxy::MulticoreSessionProxy.new(slave_core0_session, slave_core1_session, reindexing)
             end
           else
             if Rails.configuration.has_master?

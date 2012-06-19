@@ -36,6 +36,9 @@ module Sunspot
         @is_multicore = !!user_configuration_from_key('multicore')
       end
 
+      def reindexing?
+        @reindexing = !!user_configuration_from_key('reindexing')
+      end
     end
   end
 end
