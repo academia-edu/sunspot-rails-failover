@@ -11,8 +11,9 @@ module Sunspot
 
       def search(*types, &block)
         begin
+          slave_uri = URI.parse(slave_session.config.solr.url)
           Timeout.timeout(0.01) do
-            TCPSocket.new(slave_session.config.solr.url[7..-11], slave_session.config.solr.url[-9..-6].to_i)
+            TCPSocket.new(slave_uri.hostname, slave_uri.port)
           end
         rescue
           slave_dead = true
@@ -74,6 +75,7 @@ module Sunspot
         when :core0 then @core0_session.config
         when :core1 then @core1_session.config
         else raise(ArgumentError, "Expected :core0 or :core1")
+        end
       end
     end
   end
