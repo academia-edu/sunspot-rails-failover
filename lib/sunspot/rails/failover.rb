@@ -5,6 +5,7 @@ require 'sunspot/rails/failover/exception_handler_adapter'
 # Monkey patches
 require File.join(File.dirname(__FILE__), 'configuration')
 require File.join(File.dirname(__FILE__), 'rails')
+require File.join(File.dirname(File.dirname(__FILE__)), 'session_proxy', 'abstract_session_proxy')
 
 module Sunspot
   module Rails

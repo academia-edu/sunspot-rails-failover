@@ -36,6 +36,7 @@ module Sunspot
         @is_multicore = !!user_configuration_from_key('multicore')
       end
 
+      # config/sunspot.yml reindex setting enables reindex mode
       def reindexing?
         @reindexing = !!user_configuration_from_key('reindexing')
       end

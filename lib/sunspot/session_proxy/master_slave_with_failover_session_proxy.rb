@@ -48,26 +48,21 @@ module Sunspot
       # Connects to core1 of solr instance
       attr_reader :core1_session
 
-      if @reindexing
-        delegate :batch, :commit, :commit_if_delete_dirty, :commit_if_dirty,
-                 :config, :delete_dirty?, :dirty?, :index, :index!, :optimize, :remove,
-                 :remove!, :remove_all, :remove_all!, :remove_by_id,
-                 :remove_by_id!, :to => :core0_session
-        delegate :batch, :commit, :commit_if_delete_dirty, :commit_if_dirty,
-                 :config, :delete_dirty?, :dirty?, :index, :index!, :optimize, :remove,
-                 :remove!, :remove_all, :remove_all!, :remove_by_id,
-                 :remove_by_id!, :to => :core1_session
-        delegate :new_search, :search, :new_more_like_this, :more_like_this, :to => :core0_session
-      else
-        delegate :batch, :commit, :commit_if_delete_dirty, :commit_if_dirty,
-                 :config, :delete_dirty?, :dirty?, :index, :index!, :optimize, :remove,
-                 :remove!, :remove_all, :remove_all!, :remove_by_id,
-                 :remove_by_id!, :to => :core0_session
-        delegate :new_search, :search, :new_more_like_this, :more_like_this, :to => :core0_session
-      end
-
       def initialize(core0_session, core1_session, reindexing)
         @core0_session, @core1_session, @reindexing = core0_session, core1_session, reindexing
+        if @reindexing
+          self.class.delegate_multi :batch, :commit, :commit_if_delete_dirty, :commit_if_dirty,
+                   :delete_dirty?, :dirty?, :index, :index!, :optimize, :remove,
+                   :remove!, :remove_all, :remove_all!, :remove_by_id,
+                   :remove_by_id!, :to => [:core0_session, :core1_session]
+          self.class.delegate :new_search, :config, :search, :new_more_like_this, :more_like_this, :to => :core0_session
+        else
+          self.class.delegate :batch, :commit, :commit_if_delete_dirty, :commit_if_dirty,
+                   :config, :delete_dirty?, :dirty?, :index, :index!, :optimize, :remove,
+                   :remove!, :remove_all, :remove_all!, :remove_by_id,
+                   :remove_by_id!, :to => :core0_session
+          self.class.delegate :new_search, :search, :new_more_like_this, :more_like_this, :to => :core0_session
+        end
       end
 
       def config(delegate = :core0)
