@@ -51,8 +51,8 @@ module Sunspot
       def slave_core1_config(sunspot_rails_configuration)
         config = Sunspot::Configuration.build
         config.solr.url = URI::HTTP.build(
-          :host => sunspot_rails_configuration.master_hostname,
-          :port => sunspot_rails_configuration.master_port,
+          :host => sunspot_rails_configuration.hostname,
+          :port => sunspot_rails_configuration.port,
           :path => sunspot_rails_configuration.core1_path
         ).to_s
         config.solr.read_timeout = sunspot_rails_configuration.read_timeout
